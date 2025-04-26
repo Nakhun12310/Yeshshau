@@ -135,7 +135,7 @@ export default async function handler(req, res) {
         <h1>What Are You Doing</h1>
         <p>Enter your name to proceed:</p>
         <input type="text" id="nameBox" placeholder="Your Name"><br>
-        <button onclick="startTroll()">Start Troll</button>
+        <button onclick="startTroll()">Say sorry</button>
 
         <div id="loading-bar"></div>
         <div id="loading-text">Loading... Please wait!</div>
