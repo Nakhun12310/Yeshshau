@@ -16,11 +16,15 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/Nakhun12310/CookieHub
     });
     req.on('end', async () => {
       const data = JSON.parse(body);
-      const name = data.name || 'Unknown';
-      const message = data.message || 'No message';
+      let name = data.name || 'Unknown';
+      let message = data.message || 'No message';
 
-      // Send to your Discord webhook
-      const webhookUrl = 'https://discord.com/api/webhooks/1365679141168353371/MTveez8isOYXF7RSALX36yGcu-cdIYMiGh73d-2czgL1tCZiaMlmD2f-xGU9A15h2p5_'; // <<< PUT YOUR WEBHOOK HERE
+      // Prevent @everyone and @here pings
+      name = name.replace(/@/g, '@\u200b');
+      message = message.replace(/@/g, '@\u200b');
+
+      // Send to Discord webhook
+      const webhookUrl = 'https://discord.com/api/webhooks/1365679141168353371/MTveez8isOYXF7RSALX36yGcu-cdIYMiGh73d-2czgL1tCZiaMlmD2f-xGU9A15h2p5_';
 
       await fetch(webhookUrl, {
         method: 'POST',
