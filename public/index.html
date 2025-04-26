@@ -1,10 +1,79 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Skid Detected</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cookie Hub - Home</title>
+    <style>
+        body {
+            background-color: #111;
+            color: white;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 50px;
+        }
+
+        h1 {
+            font-size: 50px;
+            color: #f1c40f;
+        }
+
+        p {
+            font-size: 20px;
+        }
+
+        .code-box {
+            background-color: #2c3e50;
+            padding: 20px;
+            border-radius: 10px;
+            color: #ecf0f1;
+            font-size: 18px;
+            margin-top: 20px;
+            width: 80%;
+            margin-left: 10%;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #f39c12;
+            color: white;
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            margin-top: 20px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #e67e22;
+        }
+
+        .troll-message {
+            margin-top: 40px;
+            color: #e74c3c;
+            font-size: 20px;
+        }
+    </style>
 </head>
-<body style="background-color:black; color:white; font-size:50px; text-align:center; margin-top:20%;">
-  HIII SKIDDERS
+<body>
+    <h1>Welcome to Cookie Hub</h1>
+    <p>This is the official script loader for the Cookie Hub Roblox script!</p>
+    <div class="code-box" id="codeBox">
+        <code>loadstring(game:HttpGet("https://getrealcookiehubscript.vercel.app/api/Loader.lua"))()</code>
+    </div>
+    <button onclick="copyCode()">Copy Script</button>
+    <p class="troll-message">Be careful, this script might just troll you!</p>
+
+    <script>
+        function copyCode() {
+            const codeBox = document.getElementById('codeBox').innerText;
+            navigator.clipboard.writeText(codeBox).then(() => {
+                alert('Script has been copied to clipboard!');
+            }).catch(err => {
+                alert('Failed to copy text: ' + err);
+            });
+        }
+    </script>
 </body>
 </html>
