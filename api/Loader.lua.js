@@ -1,10 +1,6 @@
 export default function handler(req, res) {
-  const referer = req.headers.referer;
-
-  // Optional: Validate the referer to ensure it comes from your website or trusted sources
-  if (!referer || !referer.includes('yourwebsite.com')) {
-    return res.status(403).send('Access Denied');
-  }
+  // Remove or relax the referer check
+  // Optional: You can still add some security checks if you need to
 
   res.setHeader('Content-Type', 'text/plain');
   res.status(200).send(`
