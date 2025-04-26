@@ -3,12 +3,20 @@ export default async function handler(req, res) {
   const hubScriptUrl = "https://raw.githubusercontent.com/CookieHubScript/CookieLoader/main/Script.lua";
 
   try {
+    // Log when the request is received
+    console.log("Received request to Loader.lua");
+
     // Fetch the blacklist from GitHub
     const response = await fetch(blacklistUrl);
     const text = await response.text();
 
-    // Log the raw text to see if it’s fetched correctly
+    // Log the fetched text to confirm it's being fetched correctly
     console.log("Fetched blacklist:", text);
+
+    if (!text) {
+      res.status(500).send("Blacklist is empty or failed to fetch.");
+      return;
+    }
 
     // Extract usernames from the Lua file using regex
     const blacklistedUsers = [];
@@ -21,13 +29,18 @@ export default async function handler(req, res) {
     // Log the blacklisted users
     console.log("Blacklisted users:", blacklistedUsers);
 
-    // Get the player name (this assumes the script is running on Roblox)
+    // Get the player name from the query parameter
     const playerName = req.query.playerName;  // Pass playerName via the query param
     console.log("Player Name:", playerName);
 
+    // Ensure playerName is passed and not empty
+    if (!playerName) {
+      res.status(400).send("Player name is missing.");
+      return;
+    }
+
     // Check if the player is blacklisted
     if (blacklistedUsers.includes(playerName)) {
-      // If player is blacklisted, return a message
       console.log(`${playerName} is blacklisted`);
       res.status(403).send(`You are blacklisted from using this hub, ${playerName}.`);
     } else {
