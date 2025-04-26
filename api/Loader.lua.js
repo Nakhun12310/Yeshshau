@@ -192,7 +192,7 @@ export default async function handler(req, res) {
               } else {
                 loadingText.innerText = 'Done loading! Redirecting you...';
                 setTimeout(() => {
-                  window.location.href = "https://m.youtube.com/watch?v=NjD0H4eBfng&pp=ygUObmFlIG5pKiphIHNvbmc%3D"; // Rickroll URL
+                  window.location.href = "https://m.youtube.com/watch?v=dQw4w9WgXcQ&pp=ygULcmljayBhc3RsZXk%3D"; // Rickroll URL
                 }, 1000); // Redirect after 1 second
               }
             }
