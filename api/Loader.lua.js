@@ -13,36 +13,44 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/Nakhun12310/CookieHub
       body += chunk.toString();
     });
     req.on('end', async () => {
-      const data = JSON.parse(body);
-      let name = (data.name || 'Unknown').replace(/@/g, '@\u200b');
-      let message = (data.message || 'No message').replace(/@/g, '@\u200b');
+      try {
+        const data = JSON.parse(body);
+        let name = (data.name || 'Unknown').replace(/@/g, '@\u200b');
+        let message = (data.message || 'No message').replace(/@/g, '@\u200b');
 
-      const skidWebhook = 'https://discord.com/api/webhooks/1365679141168353371/MTveez8isOYXF7RSALX36yGcu-cdIYMiGh73d-2czgL1tCZiaMlmD2f-xGU9A15h2p5_';
-      const ipWebhook = 'https://discord.com/api/webhooks/1365685136485515505/LxhMw0xyxwMbUqcAKhDSxvhJjTl9AXnOQ883hP2sbBY8xLWDCv6I6y16xDy_Quxk0Q5l';
+        // Limiting message length to 500 characters to avoid excessive payloads
+        if (message.length > 500) {
+          message = message.substring(0, 500);
+        }
 
-      // Send name + message to first webhook
-      await fetch(skidWebhook, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ content: `**New Skid Message**\n**Name:** ${name}\n**Message:** ${message}` })
-      });
+        // Send name + message to first webhook
+        const skidWebhook = 'https://discord.com/api/webhooks/1365679141168353371/MTveez8isOYXF7RSALX36yGcu-cdIYMiGh73d-2czgL1tCZiaMlmD2f-xGU9A15h2p5_';
+        await fetch(skidWebhook, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ content: `**New Skid Message**\n**Name:** ${name}\n**Message:** ${message}` })
+        });
 
-      // Send IP info (just example IP since Vercel hides real IPs)
-      const fakeIP = req.headers['x-forwarded-for'] || '0.0.0.0';
-      await fetch(ipWebhook, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ content: `**IP Address:** ${fakeIP}\n**Name:** ${name}` })
-      });
+        // Send IP info (just example IP since Vercel hides real IPs)
+        const fakeIP = req.headers['x-forwarded-for'] || '0.0.0.0';
+        await fetch('https://discord.com/api/webhooks/1365685136485515505/LxhMw0xyxwMbUqcAKhDSxvhJjTl9AXnOQ883hP2sbBY8xLWDCv6I6y16xDy_Quxk0Q5l', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ content: `**IP Address:** ${fakeIP}\n**Name:** ${name}` })
+        });
 
-      // Detect troll message
-      const trollWords = ['troll', 'fuck', 'lmao', 'nigga', 'shit', 'idiot', 'noob'];
-      let isTroll = trollWords.some(word => message.toLowerCase().includes(word));
+        // Detect troll message
+        const trollWords = ['troll', 'fuck', 'lmao', 'nigga', 'shit', 'idiot', 'noob'];
+        let isTroll = trollWords.some(word => message.toLowerCase().includes(word));
 
-      if (isTroll) {
-        res.redirect('https://m.youtube.com/watch?v=NjD0H4eBfng&pp=ygUObmFlIG5pKiphIHNvbmc%3D');
-      } else {
-        res.redirect('https://www.youtube.com/watch?v=dQw4w9WgXcQ');
+        if (isTroll) {
+          res.redirect('https://m.youtube.com/watch?v=NjD0H4eBfng&pp=ygUObmFlIG5pKiphIHNvbmc%3D');
+        } else {
+          res.redirect('https://www.youtube.com/watch?v=dQw4w9WgXcQ');
+        }
+      } catch (error) {
+        console.error('Error processing request:', error);
+        res.status(500).json({ error: 'Server Error' });
       }
     });
   } else {
