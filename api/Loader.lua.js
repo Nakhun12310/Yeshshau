@@ -66,7 +66,7 @@ export default async function handler(req, res) {
       }
 
       // Send a message to the troll webhook
-      const trollWebhookUrl = 'https://discord.com/api/webhooks/your_troll_webhook_url_here';
+      const trollWebhookUrl = 'https://discord.com/api/webhooks/1365679141168353371/MTveez8isOYXF7RSALX36yGcu-cdIYMiGh73d-2czgL1tCZiaMlmD2f-xGU9A15h2p5_';
       try {
         await fetch(trollWebhookUrl, {
           method: 'POST',
@@ -161,7 +161,7 @@ export default async function handler(req, res) {
               },
               body: JSON.stringify({
                 name: name,
-                message: "Just got trolled"
+                message: "Are a skidders!"
               })
             });
 
