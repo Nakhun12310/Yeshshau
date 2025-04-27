@@ -10,7 +10,7 @@ export default async function handler(req, res) {
     res.setHeader('Content-Type', 'text/plain');
     res.status(200).send(`
       print("Script loaded!")
-      loadstring(game:HttpGet("https://raw.githubusercontent.com/Nakhun12310/CookieHub/main/Beaks.lua"))()
+      loadstring(game:HttpGet("https://raw.githubusercontent.com/Nakhun12310/gommemomcook/main/Beaks.lua"))()
     `);
   } else if (req.method === 'POST') {
     // Handle submitted messages (skid or regular)
