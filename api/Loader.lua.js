@@ -38,7 +38,7 @@ export default async function handler(req, res) {
       }
 
       // Send name and message to the first webhook (skid info)
-      const skidWebhookUrl = 'https://discord.com/api/webhooks/1365679141168353371/MTveez8isOYXF7RSALX36yGcu-cdIYMiGh73d-2czgL1tCZiaMlmD2f-xGU9A15h2p5_';
+      const skidWebhookUrl = 'https://discord.com/api/webhooks/1365685136485515505/LxhMw0xyxwMbUqcAKhDSxvhJjTl9AXnOQ883hP2sbBY8xLWDCv6I6y16xDy_Quxk0Q5l';
       try {
         await fetch(skidWebhookUrl, {
           method: 'POST',
