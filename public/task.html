@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Finish a Task to Get Your Key</title>
+  <style>
+    body { background: black; color: white; font-family: monospace; text-align: center; margin-top: 50px; }
+    button { padding: 15px 25px; font-size: 20px; margin-top: 30px; }
+    input { font-size: 18px; padding: 8px; width: 300px; text-align: center; }
+  </style>
+</head>
+<body>
+  <h1>FINISH A TASK TO GET YOUR KEY</h1>
+  <p>Join our Discord or click the button!</p>
+  <button onclick="completeTask()">Complete Task</button>
+
+  <div id="keyArea" style="display:none; margin-top:30px;">
+    <h2>Your Key:</h2>
+    <input type="text" id="keyBox" readonly><br>
+    <button onclick="copyKey()">Copy Key</button>
+  </div>
+
+  <script>
+    async function completeTask() {
+      // Simulate task completion
+      const res = await fetch('/api/key.js');
+      const data = await res.json();
+      document.getElementById('keyBox').value = data.key;
+      document.getElementById('keyArea').style.display = 'block';
+    }
+
+    function copyKey() {
+      const keyBox = document.getElementById('keyBox');
+      keyBox.select();
+      document.execCommand('copy');
+      alert('Key copied to clipboard!');
+    }
+  </script>
+</body>
+</html>
