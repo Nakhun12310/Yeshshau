@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Cookie Hub - Key Control Panel</title>
+  <style>
+    body {
+      background-color: #121212;
+      color: #ffffff;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 50px;
+    }
+
+    h1 {
+      font-size: 40px;
+      color: #f39c12;
+    }
+
+    .panel {
+      background-color: #1e1e1e;
+      border-radius: 10px;
+      padding: 30px;
+      margin: 30px auto;
+      width: 80%;
+      max-width: 500px;
+    }
+
+    .info {
+      margin: 20px 0;
+      font-size: 18px;
+    }
+
+    button {
+      margin: 10px;
+      padding: 10px 20px;
+      font-size: 18px;
+      border: none;
+      border-radius: 5px;
+      background-color: #f39c12;
+      color: white;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #e67e22;
+    }
+
+    .key-box {
+      background: #2c3e50;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      font-family: monospace;
+      font-size: 16px;
+      word-break: break-word;
+    }
+  </style>
+</head>
+<body>
+  <h1>Cookie Hub - Key Panel</h1>
+  
+  <div class="panel">
+    <div class="info">Your Key:</div>
+    <div class="key-box" id="keyBox">ABC123-FAKEKEY-EXAMPLE</div>
+    
+    <div class="info">Attempts Left: <span id="attemptsLeft">3</span></div>
+
+    <button onclick="resetHWID()">Reset HWID</button>
+    <button onclick="copyScript()">Get Script</button>
+    <button onclick="renewKey()">Renew Key</button>
+  </div>
+
+  <script>
+    // Dummy info for now
+    let attempts = 3;
+
+    function resetHWID() {
+      if (confirm('Are you sure you want to reset your HWID?')) {
+        alert('HWID has been reset! Please rebind your key.');
+        // here you would actually call your API to reset the HWID
+      }
+    }
+
+    function copyScript() {
+      const script = `loadstring(game:HttpGet("https://getrealcookiehubscript.vercel.app/api/Loader.lua"))()`;
+      navigator.clipboard.writeText(script).then(() => {
+        alert('Script copied to clipboard!');
+      }).catch(err => {
+        alert('Failed to copy: ' + err);
+      });
+    }
+
+    function renewKey() {
+      alert('Renew tasks coming soon!');
+      // Later you can redirect to a "Task" page here
+    }
+
+    function useAttempt() {
+      attempts--;
+      if (attempts <= 0) {
+        alert('You have used all your attempts. Please renew your key.');
+        document.getElementById('attemptsLeft').innerText = '0';
+      } else {
+        document.getElementById('attemptsLeft').innerText = attempts;
+      }
+    }
+  </script>
+</body>
+</html>
