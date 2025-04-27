@@ -1,14 +1,11 @@
-require('dotenv').config();
-const BOT_TOKEN = process.env.DISCORD_BOT_TOKEN;
-
 // /api/verifydiscord.js
 
 import { Client, GatewayIntentBits } from 'discord.js';
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMembers] });
 
-const BOT_TOKEN = 'MTM2NTg5NDQxNjUwOTgzMzIxNg.GorKUk.xkOFgDB_kXzrvQaqwM1AXHbcU464pRTDO7GKKs'; // <== <<< paste your NEW BOT TOKEN here
-const SERVER_ID = '1349958402637561968'; // Your server ID
+const BOT_TOKEN = process.env.DISCORD_BOT_TOKEN;  // Fetch the bot token securely
+const SERVER_ID = '1349958402637561968';  // Your server ID
 
 let isReady = false;
 client.once('ready', () => {
